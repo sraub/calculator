@@ -1,0 +1,23 @@
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+  }
+  html, body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  #exemption .panel-body {
+    display: block !important;
+  }
+  .panel {
+    border: none;
+  }
+  .instructions {
+    display: none;
+  }
+  .bs-callout {
+    border: none;
+    padding: 0;
+  }
+}

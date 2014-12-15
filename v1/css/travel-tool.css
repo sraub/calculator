@@ -1,0 +1,248 @@
+/*
+ * Page
+ */
+/* Never use a container wider than 750px. */
+@media (min-width: 992px) {
+  .container {
+    width: 750px;
+  }
+}
+/* Footer */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+.footer .container {
+  margin: 20px 0;
+}
+/* Navbar fixed top */
+body {
+  padding-top: 70px;
+}
+
+/*
+ * Calculator
+ */
+/* Help links */
+span.help {
+  margin-left: 7px;
+}
+span.help a {
+  font-size: smaller;
+}
+.input-group a {
+  line-height: 35px;
+}
+
+/* Input styles */
+.form-control[readonly] {
+  border: none;
+  box-shadow: none;
+  background-color: #fff;
+  cursor: auto;
+}
+.final-destination {
+  margin-right: 7px;
+  width: 450px !important;
+}
+#calculator .flight input {
+  border-radius: 0px;
+}
+#calculator .fare {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+#calculator .leg-list input,
+#calculator .leg-list select {
+  display: table-cell;
+  padding: 4px 6px;
+}
+#calculator input.carrier {
+  width: 60px;
+}
+#calculator input.flight-number {
+  width: 50px;
+}
+#calculator input[type="date"] {
+  line-height: 20px;
+  margin-right: 10px;
+  width: 150px;
+}
+#calculator .departure {
+  border: none;
+  box-shadow: none;
+  line-height: 20px;
+  width: 150px;
+}
+#calculator .arrival {
+  width: 150px;
+}
+/* Remove row */
+#calculator .leg-list .remove-row {
+  color: gray;
+  float: right;
+  line-height: 35px;
+}
+#calculator .leg-list .remove-row:hover {
+  color: black;
+}
+#calculator span.final-destination {
+  font-weight: bold;
+}
+
+/* Colors for the flights in both the calculator and the destination list */
+ul.flight li {
+  border-left: 3px solid;
+}
+.color1 ul.flight li,
+.destination-list input.final-destination.color1 {
+  border-left-color: #337ab7;
+}
+.color2 ul.flight li,
+.destination-list input.final-destination.color2 {
+  border-left-color: #337ab7;
+}
+.color3 ul.flight li,
+.destination-list input.final-destination.color3 {
+  border-left-color: #337ab7;
+}
+
+/*
+ * Comparison Table
+ */
+#comparison .flight-header-row td {
+  font-style: italic;
+  padding-top: 16px !important;
+  border-top: none;
+}
+#comparison .subtotal-row td {
+  border-top-width: 2px;
+}
+#comparison .total-row td, #comparison .total-row th {
+  border-top: none;
+  padding-top: 12px;
+}
+#comparison .table {
+  margin-bottom: 0;
+}
+#comparison .header th {
+  text-align: center;
+}
+td.cost {
+  text-align: right;
+}
+
+/*
+ * Exemption
+ */
+#exemption .total-row td {
+  font-weight: bold;
+}
+#exemption table.comparison {
+  max-width: 600px;
+}
+#exemption table.comparison th {
+  text-align: center;
+}
+#exemption table.comparison th:first {
+  text-align: left !important;
+}
+
+/*
+ * Destination List
+ */
+.destination-list {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.destination-list .list-group-item {
+  border: none;
+  padding-left: 0px;
+}
+.destination-list input.final-destination {
+  border-left: 2px solid #ccc;
+  padding-left: 10px;
+}
+
+/*
+ * Callouts / Instructions
+ */
+.bs-callout {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #eee;
+  border-left-color: #777;
+  border-radius: 3px;
+  border-left-width: 3px;
+}
+.bs-callout .instructions {
+  margin: 20px 0 0;
+}
+.bs-callout+.bs-callout {
+  margin-top: -5px;
+}
+.bs-callout-default {
+  border-left-color: #777;
+}
+.bs-callout-success {
+  border-left-color: #5cb85c;
+}
+.bs-callout-warning {
+  border-left-color: #f0ad4e;
+}
+.bs-callout-danger {
+  border-left-color: #d9534f;
+}
+
+/*
+ * Buttons with icons
+ */
+.bs-glyphicons-list .glyphicon-class {
+  display: block;
+  text-align: center;
+  word-wrap: break-word;
+}
+.bs-glyphicons-list {
+  list-style: none;
+  padding: 0;
+}
+.bs-glyphicons li {
+  float: left;
+  padding: 10px;
+  line-height: 1.4;
+  text-align: center;
+  background-color: #f9f9f9;
+  border: 1px solid #fff;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .bs-glyphicons li {
+    width: 100%;
+    font-size: 12px;
+  }
+}
+
+/*
+ * Autocomplete
+ */
+.ui-widget {
+  font-family: inherit;
+}
+.ui-autocomplete {
+  max-height: 180px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}

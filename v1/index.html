@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Travel Tool</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/travel-tool.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+
+<body>
+<!-- Begin header -->
+<nav class="navbar navbar-default navbar-fixed-top no-print" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="navbar-brand">Travel Tool</div>
+    </div>
+    <div id="navbar" rold="tablist" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li role="presentation" class="active">
+          <a href="#calculator" aria-controls="calculator" role="tab" data-toggle="tab">Calculator</a>
+        </li>
+        <li role="presentation">
+          <a href="#about" aria-controls="about" role="tab" data-toggle="tab">About</a>
+        </li>
+        <li role="presentation">
+          <a href="#help" aria-controls="help" role="tab" data-toggle="tab">Help</a>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+<!-- End header -->
+
+<!-- Begin page content -->
+<div class="container tab-content">
+  <!-- Begin About -->
+  <div class="tab-pane" role="tabpanel" id="about">
+    <div class="panel panel-default">
+      <div class="panel-heading no-print">
+        About
+      </div>
+      <div class="panel-body">
+        Explanation of the Travel Tool.
+      </div>
+    </div>
+  </div>
+  <!-- End About -->
+
+  <!-- Begin Help -->
+  <div class="tab-pane" role="tabpanel" id="help">
+    <div class="panel panel-default">
+      <div class="panel-heading no-print">
+        Help
+      </div>
+      <div class="panel-body">
+        How to use the Travel Tool.
+      </div>
+    </div>
+  </div>
+  <!-- End Help -->
+
+  <!-- Begin Calculator -->
+  <div class="tab-pane active" role="tabpanel" id="calculator">
+    <!-- Tabs -->
+    <div class="panel panel-default">
+      <div class="panel-heading no-print">
+        <ul class="nav nav-pills">
+          <li role="presentation" class="active">
+            <a href="#itinerary" aria-controls="itinerary" role="tab" data-toggle="pill">Itinerary</a>
+          </li>
+          <li role="presentation">
+            <a href="#contract" aria-controls="contract" role="tab" data-toggle="pill">Contract Fare</a>
+          </li>
+          <li role="presentation">
+            <a href="#alternate" aria-controls="alternate" role="tab" data-toggle="pill">Alternate Fare</a>
+          </li>
+          <li role="presentation">
+            <a href="#comparison" aria-controls="comparison" role="tab" data-toggle="pill">Comparison</a>
+          </li>
+          <li role="presentation">
+            <a href="#exemption" aria-controls="exemption" role="tab" data-toggle="pill">Exemption</a>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane no-print active" id="itinerary">
+          <div class="panel-body">
+            <!-- Instructions -->
+            <div class="bs-callout bs-callout-default">
+              Add each flight in the itinerary. The destination should be the <i>final</i> destination, if that requires ground transportation. Layover and rest stop destinations should not be included. An itinerary may have one or more flight.
+            </div>
+            <ul class="list-group destination-list">
+            </ul>
+            <button type="button" class="btn btn-default btn-sm add-destination">
+              <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Add Destination
+            </button>
+          </div>
+        </div>
+
+        <!-- Begin Contract Fare tab -->
+        <div role="tabpanel" class="tab-pane no-print" id="contract">
+          <div class="panel-body">
+            <!-- Instructions -->
+            <div class="bs-callout bs-callout-default">
+              Select the flight number and departure date for each leg of each flight. To add or remove flights, return to the <a href="#itinerary">Itinerary</a> tab. Note that the flights with the shortest possible connections should be listed. Rest stop locations will be computed automatically to reduce cost for the comparison.
+            </div>
+
+            <span>Fare<span class="help"><a tabIndex=-1 href="#help?fare">?</a></span></span>
+            <div class="input-group fare">
+              <span class="input-group-addon">$</span>
+              <input type="number" class="form-control">
+              <span class="input-group-addon">.00</span>
+            </div>
+
+            <div id="flight-placeholder"></div>
+
+            <!--
+            <button type="button" class="btn btn-default btn-sm add-flight">
+              <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Add Flight
+            </button>
+            -->
+          </div>
+        </div>
+
+        <!-- Begin Alternate Fare tab -->
+        <div role="tabpanel" class="tab-pane no-print" id="alternate">
+          <div class="panel-body">
+            <!-- Instructions -->
+            <div class="bs-callout bs-callout-default">
+              Select the flight number and departure date for each leg of each flight. To add or remove flights, return to the <a href="#itinerary">Itinerary</a> tab. Note that the flights with the shortest possible connections should be listed. Rest stop locations will be computed automatically to reduce cost for the comparison.
+            </div>
+
+            <span>Fare<span class="help"><a tabIndex=-1 href="#help?fare">?</a></span></span>
+            <div class="input-group fare">
+              <span class="input-group-addon">$</span>
+              <input type="number" class="form-control">
+              <span class="input-group-addon">.00</span>
+            </div>
+
+            <div id="flight-placeholder"></div>
+
+            <!--
+            <button type="button" class="btn btn-default btn-sm add-flight">
+              <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Add Flight
+            </button>
+            -->
+          </div>
+        </div>
+
+        <!-- Begin Comparison Table tab -->
+        <div role="tabpanel" class="tab-pane no-print" id="comparison">
+          <div class="panel-body">
+            <div class="bs-callout bs-callout-default incomplete">
+              The contract itinerary and alternate itinerary must be completed.
+            </div>
+            <div class="bs-callout bs-callout-warning warnings">
+              The following errors must be resolved in order to calculate
+              whether an exemption can be granted.
+              <ul>
+              </ul>
+            </div>
+            <table class="table">
+              <thead>
+                <tr class="header">
+                  <th></th>
+                  <th colspan="2">Contract</th>
+                  <th colspan="2">Alternate</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Begin Exemption tab -->
+        <div role="tabpanel" class="tab-pane" id="exemption">
+          <div class="panel-body">
+            <!-- Begin warnings -->
+            <div class="bs-callout bs-callout-default incomplete">
+              The contract itinerary and alternate itinerary must be completed.
+            </div>
+            <div class="bs-callout bs-callout-warning warnings">
+              The following errors must be resolved in order to calculate whether
+              an exemption can be granted.
+              <ul>
+              </ul>
+            </div>
+            <div class="bs-callout bs-callout-success qualifies">
+              This itinerary qualifies for an exemption from the use of a contract fare due to the alternate itinerary being of lower total cost as allowed by <a href="http://www.gsa.gov/portal/ext/public/site/FTR/file/Chapter301p010.html/category/21868/#wp1201972" target="_new">Section 301-10.4 of the Federal Travel Regulation</a>.
+            </div>
+            <div class="bs-callout bs-callout-danger not-qualifies">
+              This itinerary does <i>not</i> qualify for an exemption from the use of a contract fare due to the alternate itinerary being of higher total cost.
+            </div>
+            <div class="bs-callout bs-callout-default qualifies instructions">
+              Print this page and include it as the Justification for Form DS-4022.
+            </div>
+
+            <!-- Begin itinerary, fare, and comparison breakdown -->
+            <p class="lead">Itinerary</p>
+            <table class="table table-condensed itinerary">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Origin</th>
+                  <th>Destination</th>
+                  <th>Arrival Date</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+            <p class="lead">Comparison</p>
+            <table class="table table-condensed comparison">
+              <thead>
+                <tr>
+                  <th>Cost</th>
+                  <th>Contract</th>
+                  <th>Alternate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="fare-row">
+                  <td>Fare</td>
+                  <td class="contract cost"></td>
+                  <td class="alternate cost"></td>
+                </tr>
+                <tr class="lost-worktime-row">
+                  <td>Lost Worktime</td>
+                  <td class="contract cost"></td>
+                  <td class="alternate cost"></td>
+                </tr>
+                <tr class="perdiem-row">
+                  <td>M & IE</td>
+                  <td class="contract cost"></td>
+                  <td class="alternate cost"></td>
+                </tr>
+                <tr class="lodging-row">
+                  <td>Lodging</td>
+                  <td class="contract cost"></td>
+                  <td class="alternate cost"></td>
+                </tr>
+                <tr class="total-row">
+                  <td>Total</td>
+                  <td class="contract cost"></td>
+                  <td class="alternate cost"></td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="lead">Contract Fare</p>
+            <table class="table table-condensed contract-details">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Flight</th>
+                <th>Destination</th>
+                <th>Hours</th>
+                <th>M & IE</th>
+                <th>Layover</th>
+                <th>Lodging</th>
+              </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+            <p class="lead">Alternate Fare</p>
+            <table class="table table-condensed alternate-details">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Flight</th>
+                <th>Destination</th>
+                <th>Hours</th>
+                <th>M & IE</th>
+                <th>Layover</th>
+                <th>Lodging</th>
+              </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <p style="text-align:center" class="no-print">
+            <button type="button" class="btn btn-default" id="print">Print</button>
+          </p>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <!-- End Calculator -->
+</div>
+
+<!-- Begin footer -->
+<footer class="footer no-print">
+  <div class="container">
+    <p class="text-muted">Place footer content here.</p>
+  </div>
+</footer>
+<!-- End footer -->
+
+<!-- Begin hidden templates -->
+<div style="display: none;">
+<!-- Begin leg template -->
+<li class="list-group-item leg-list" id="leg-template">
+  <input class="form-control carrier listen" type="text" placeholder="Carrier"/>
+  <input class="form-control flight-number listen" type="number" placeholder="#"/>
+  <input class="form-control date listen" type="date"/>
+  <input class="form-control departure" type="text" readonly tabindex=-1/>
+  <select class="form-control departure" style="display:none">
+    <option value=-1>Select Destination</option>
+  </select>
+  <input class="form-control arrival" type="text" readonly tabindex=-1/>
+  <span tabIndex=0 class="glyphicon glyphicon-remove remove-row" aria-hidden="true"></span>
+</li>
+<!-- End leg template -->
+
+<!-- Begin itinerary template -->
+<li id="destination-template" class="list-group-item leg-list">
+  <input class="form-control final-destination" type="text" placeholder="Enter final destination">
+  <span tabIndex=0 class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+</li>
+<!-- End itinerary template -->
+
+<!-- Begin flight template -->
+<div id="flight-template">
+  <ul class="list-group flight">
+    <li class="list-group-item">
+      <span class="final-destination"></span>
+       <!--
+      <span class="input-group">
+        <input type="text" readonly class="form-control final-destination" placeholder="Enter final destination" value="Richmond, NSW, Australia">
+        <span class="help"><a tabIndex=-1 href="#help?final-destination">?</a></span>
+      </span>
+      -->
+    </li>
+    <!-- Insert legs here -->
+    <li class="list-group-item">
+      <button type="button" class="btn btn-default btn-sm add-leg">
+        <span class="glyphicon glyphicon-plane" aria-hidden="true"></span> Add Leg
+      </button>
+      <!--
+      <button type="button" class="btn btn-default btn-sm remove-flight">
+        <span class="glyphicon glyphicon-remove remove-flight" aria-hidden="true"></span> Remove Flight
+      </button>
+      -->
+    </li>
+  </ul>
+</div>
+<!-- End flight template -->
+
+<!-- Begin comparison table template -->
+<table id="comparison-table-template">
+<tr class="fare-row">
+  <td>Fare</td>
+  <td></td>
+  <td class="contract cost"></td>
+  <td></td>
+  <td class="alternate cost"></td>
+</tr>
+<tr class="flight-header-row">
+  <td colspan="100%">Flight <span class="flight-index">X</span>: <span
+      class="flight-origin">Origin</span> to <span
+      class="flight-destination">Destination</span>
+  </td>
+</tr>
+<tr class="item-row">
+  <td class="item-row-label">Label</td>
+  <td class="contract desc"></td>
+  <td class="contract cost"></td>
+  <td class="alternate desc"></td>
+  <td class="alternate cost"></td>
+</tr>
+<tr class="subtotal-row">
+  <td>Subtotal</td>
+  <td></td>
+  <td class="contract cost"></td>
+  <td></td>
+  <td class="alternate cost"></td>
+</tr>
+<tr class="total-row">
+  <td>Total</td>
+  <td></td>
+  <td class="contract cost"></td>
+  <td></td>
+  <td class="alternate cost"></td>
+</tr>
+</table>
+<!-- End comparison table template -->
+
+<!-- Begin exemption template -->
+<table id="exemption-template">
+  <tr class="flight-summary">
+    <td class="flight-index"></td>
+    <td class="flight-origin" ></td>
+    <td class="flight-destination"></td>
+    <td class="flight-arrival-date"></td>
+  </tr>
+  <tr class="flight-details">
+    <td class="flight-index"></td>
+    <td class="flight-number"></td>
+    <td class="flight-destination"></td>
+    <td class="flying-time"></td>
+    <td class="perdiem-cost"></td>
+    <td class="layover-time"></td>
+    <td class="lodging-cost"></td>
+  </tr>
+</table>
+<!-- End exemption template -->
+</div>
+<!-- End hidden templates -->
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="css/print.css">
+<script type="text/javascript" src="js/states.js"></script>
+<script type="text/javascript" src="js/perdiem.js"></script>
+<script type="text/javascript" src="js/sample-response.js"></script>
+<script type="text/javascript" src="js/autocomplete.js"></script>
+<script type="text/javascript" src="js/schedule-engine.js"></script>
+<script type="text/javascript" src="js/per-diem-lookup.js"></script>
+<script type="text/javascript" src="js/itinerary.js"></script>
+<script type="text/javascript" src="js/destinations.js"></script>
+<script type="text/javascript" src="js/exemption.js"></script>
+<script type="text/javascript" src="js/comparison-table.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript">
+var engine = new ScheduleEngine();
+var perDiemLookup = new PerDiemLookup();
+
+var contractItinerary = new Itinerary($('#contract'));
+var alternateItinerary = new Itinerary($('#alternate'));
+var destinationsList = new DestinationList(
+    contractItinerary, alternateItinerary);
+
+var exemption = new Exemption($('#exemption'));
+var comparisonTable = new ComparisonTable($('#comparison .table > tbody'));
+
+$('.nav-pills > li > a[href="#comparison"').click(function() {
+  comparisonTable.update(contractItinerary, alternateItinerary);
+});
+$('.nav-pills > li > a[href="#exemption"').click(function() {
+  exemption.update(contractItinerary, alternateItinerary);
+});
+$('.panel-body a[href="#itinerary"').click(function() {
+  $('.nav-pills a[href="#itinerary"]').tab('show');
+});
+
+// TODO(sraub): Show and hide these warnings as necessary.
+$('.incomplete').hide();
+$('.warnings').hide();
+
+$('#print').click(function() {
+  window.print();
+});
+</script>
+</body>
+
+</html>
