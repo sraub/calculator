@@ -27,10 +27,9 @@ ScheduleEngine.getScheduleData = function(
     return false;
   }
 
-  if (false) { //$) {
+  if ($) {
     var requestUri = 'https://api.flightstats.com/flex/schedules/rest' +
-        '/v1/jsonp/flight/' + leg.getCarrier() +
-        '/' + leg.getFlightNumber() + 
+        '/v1/jsonp/flight/' + carrier + '/' + flightNumber +
         '/departing/' + year + '/' + month + '/' + day +
         '?appId=63632684&appKey=2e3524c7428d0f528ef94db5ce48e5ee';
     $.ajax({

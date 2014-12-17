@@ -15,9 +15,6 @@ PerDiemLookup.prototype.getRateList_ = function(destination) {
   var perDiemList = PERDIEM_DATA[destination];
   if (!perDiemList) {
     // Ask the user to select the per-diem.
-    var perDiemDialog = new PerDiemDialog();
-//    perDiemDialog.init(leg);
-//    openPerDiemDialog(destination);
     // TODO(sraub): Log that this per-diem was not found.
   }
   return perDiemList;
