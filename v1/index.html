@@ -119,6 +119,11 @@
             <button type="button" class="btn btn-default btn-sm add-destination">
               <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Add Destination
             </button>
+            <div>
+              <button type="button" class="btn btn-default btn-sm continue-button">
+                Continue <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -144,6 +149,11 @@
               <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Add Flight
             </button>
             -->
+            <div>
+              <button type="button" class="btn btn-default btn-sm continue-button">
+                Continue <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -169,6 +179,11 @@
               <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Add Flight
             </button>
             -->
+            <div>
+              <button type="button" class="btn btn-default btn-sm continue-button">
+                Continue <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -195,6 +210,11 @@
               <tbody>
               </tbody>
             </table>
+            <div>
+              <button type="button" class="btn btn-default btn-sm continue-button">
+                Continue <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -332,7 +352,7 @@
   <input class="form-control date listen" type="date"/>
   <input class="form-control departure" type="text" readonly tabindex=-1/>
   <select class="form-control departure" style="display:none">
-    <option value=-1>Select Destination</option>
+    <option value=-1>Select Departure</option>
   </select>
   <input class="form-control arrival" type="text" readonly tabindex=-1/>
   <span tabIndex=0 class="glyphicon glyphicon-remove remove-row" aria-hidden="true"></span>
@@ -469,6 +489,25 @@ $('.nav-pills > li > a[href="#exemption"').click(function() {
 $('.panel-body a[href="#itinerary"').click(function() {
   $('.nav-pills a[href="#itinerary"]').tab('show');
 });
+
+function setUpContinueButton(i, element) {
+  $('.continue-button', element).click(function() {
+    var nextElement = $('#calculator .tab-content .tab-pane').get(i + 1);
+    if (nextElement) {
+      $('.nav-pills a[href="#' + nextElement.id + '"]').click();
+    }
+  });
+}
+$('#calculator .tab-content .tab-pane').each(setUpContinueButton);
+
+/*
+$('#itinerary .continue-button').click(function() {
+  $('.nav-pills a[href="#contract"]').tab('show');
+});
+$('#contract .continue-button').click(function() {
+  $('.nav-pills a[href="#alternate"]').tab('show');
+});
+*/
 
 // TODO(sraub): Show and hide these warnings as necessary.
 $('.incomplete').hide();

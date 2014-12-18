@@ -469,6 +469,7 @@ Leg.prototype.setResponse = function(response) {
     $('input.departure', this.element_).show();
     $('select.departure', this.element_).hide();
   } else if (flights.length > 1) {
+    $('input.arrival', this.element_).val('');
     $('input.departure', this.element_).hide();
     $('select.departure', this.element_).show();
   }
@@ -496,8 +497,13 @@ Leg.prototype.updateFlightInfo_ = function(index) {
 
   var perDiemRates = perDiemLookup.getRates(
       arrivalCity, this.arrivalDateLocal_.toLocaleDateString());
-  this.hotelRate_ = perDiemRates[0];
-  this.perDiemRate_ = perDiemRates[1];
+  if (perDiemRates) {
+    this.hotelRate_ = perDiemRates[0];
+    this.perDiemRate_ = perDiemRates[1];
+  } else {
+    // TODO(sraub): Fix unknown per diems.
+    this.hotelRate_ = this.perDiemRate_ = 0;
+  }
 
   $('input.departure', this.element_).val(departureCity);
   $('input.arrival', this.element_).val(arrivalCity);

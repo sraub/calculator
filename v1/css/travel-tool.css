@@ -73,7 +73,7 @@ span.help a {
   width: 60px;
 }
 #calculator input.flight-number {
-  width: 50px;
+  width: 60px;
 }
 #calculator input[type="date"] {
   line-height: 20px;
@@ -204,6 +204,9 @@ td.cost {
 }
 .bs-callout-danger {
   border-left-color: #d9534f;
+}
+.continue-button {
+  float: right;
 }
 
 /*
