@@ -3,12 +3,15 @@ function Exemption(element) {
 }
 
 Exemption.prototype.update = function(contract, alternate) {
+  $('#exemption .bs-callout').hide();
+  if (isNaN(contract.getTotalCost()) || isNaN(alternate.getTotalCost())) {
+    $('#exemption .incomplete').show();
+    return;
+  }
   if (contract.getTotalCost() <= alternate.getTotalCost()) {
-    $('#exemption .qualifies').hide();
     $('#exemption .not-qualifies').show();
   } else {
     $('#exemption .qualifies').show();
-    $('#exemption .not-qualifies').hide();
   }
 
   // Itinerary
@@ -40,6 +43,8 @@ Exemption.prototype.update = function(contract, alternate) {
       contractCostData.perDiem, alternateCostData.perDiem);
   setComparisonCost('.lodging-row',
       contractCostData.hotel, alternateCostData.hotel);
+  setComparisonCost('.total-row',
+      contract.getTotalCost(), alternate.getTotalCost());
 
   function fillItineraryDetails(itinerary, parentElement) {
     function addDetailsRow(index, rowspan, destination, flightNumber,
