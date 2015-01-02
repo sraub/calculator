@@ -53,7 +53,8 @@ span.help a {
   background-color: #fff;
   cursor: auto;
 }
-.final-destination {
+.final-destination,
+.duty-station {
   margin-right: 7px;
   width: 450px !important;
 }
@@ -91,11 +92,13 @@ span.help a {
 }
 /* Remove row */
 #calculator .leg-list .remove-row {
-  color: gray;
   float: right;
+}
+#calculator .leg-list span.glyphicon-remove {
+  color: #555;
   line-height: 35px;
 }
-#calculator .leg-list .remove-row:hover {
+#calculator .leg-list span.glyphicon-remove:hover {
   color: black;
 }
 #calculator span.final-destination {
@@ -107,15 +110,15 @@ ul.flight li {
   border-left: 3px solid;
 }
 .color1 ul.flight li,
-.destination-list input.final-destination.color1 {
+#itinerary input.final-destination.color1 {
   border-left-color: #337ab7;
 }
 .color2 ul.flight li,
-.destination-list input.final-destination.color2 {
+#itinerary input.final-destination.color2 {
   border-left-color: #337ab7;
 }
 .color3 ul.flight li,
-.destination-list input.final-destination.color3 {
+#itinerary input.final-destination.color3 {
   border-left-color: #337ab7;
 }
 
@@ -163,15 +166,16 @@ td.cost {
 /*
  * Destination List
  */
-.destination-list {
+#itinerary .list-group {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.destination-list .list-group-item {
+#itinerary .list-group-item {
   border: none;
   padding-left: 0px;
 }
-.destination-list input.final-destination {
+#itinerary input.final-destination,
+#itinerary input.duty-station {
   border-left: 2px solid #ccc;
   padding-left: 10px;
 }
@@ -248,4 +252,11 @@ td.cost {
   overflow-y: auto;
   /* prevent horizontal scrollbar */
   overflow-x: hidden;
+}
+
+div.instructions {
+  margin-bottom: 5px;
+  margin-top: -5px;
+  color: #777;
+  font-style: italic;
 }

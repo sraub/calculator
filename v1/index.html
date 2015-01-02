@@ -114,6 +114,15 @@
             <div class="bs-callout bs-callout-default">
               Add each flight in the itinerary. The destination should be the <i>final</i> destination, if that requires ground transportation. Layover and rest stop destinations should not be included. An itinerary may have one or more flight.
             </div>
+            <h3>Duty Station</h3>
+            <div class="instructions">Enter your regular duty station, even if you are not flying to or from that location.</div>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <input class="form-control duty-station" type="text" placeholder="Enter duty station"/>
+              </li>
+            </ul>
+            <h3>Destinations</h3>
+            <div class="instructions">List all destinations, including a return. For example, if you are flying round-trip from Washington to Geneva, list "Geneva, Switzerland" and "Washington, DC". Do <u>not</u> include layovers or rest stops.</div>
             <ul class="list-group destination-list">
             </ul>
             <button type="button" class="btn btn-default btn-sm add-destination">
@@ -362,7 +371,7 @@
 <!-- Begin itinerary template -->
 <li id="destination-template" class="list-group-item leg-list">
   <input class="form-control final-destination" type="text" placeholder="Enter final destination">
-  <span tabIndex=0 class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+  <span tabIndex=-1 class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 </li>
 <!-- End itinerary template -->
 

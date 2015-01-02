@@ -37,3 +37,18 @@ function parseTime(timeString, utcOffsetHoursString) {
   var utcOffsetHours = parseInt(utcOffsetHoursString);
   return new Date(Date.parse(timeString) - (utcOffsetHours * 60 * 60 * 1000));
 }
+
+function normalizeState(destination, useAbbreviation) {
+  var localityRegion = destination.split(', ');
+  if (localityRegion.length > 1) {
+    // The airport data uses state abbreviations, but the full name of the
+    // state is listed in the per-diem map, so convert the abbreviation to the
+    // full name.
+    var state = useAbbreviation ? STATE_NAMES[localityRegion[1]] :
+        STATE_ABBREVIATIONS[localityRegion[1]];
+    if (state) {
+      destination = localityRegion[0] + ', ' + state;
+    }
+  }
+  return destination;
+}

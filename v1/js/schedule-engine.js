@@ -22,8 +22,15 @@ ScheduleEngine.getScheduleData = function(
     }
   }
 
-  if (!month || !day || !year || year < 2011) {
-    window.console.log('Problem with date', dateLocal);
+  if (!month || !day || !year) {
+    return false;
+  }
+ 
+  if (year < 2015 || year > 2017) {
+    if (year >= 1900) {
+      // TODO(sraub): Print a message about only accepting years 2015-2017.
+      window.console.log('Date must be between 2015 and 2017', dateLocal);
+    }
     return false;
   }
 

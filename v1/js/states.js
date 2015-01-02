@@ -60,3 +60,10 @@ var STATE_ABBREVIATIONS = {
   'VI': 'Virgin Islands'
 };
 
+// TODO(sraub): Map these from state name to state abbreviation and then convert
+// full name to abbreviation.
+var STATE_NAMES = {};
+for (var abbreviation in STATE_ABBREVIATIONS) {
+  var name = STATE_ABBREVIATIONS[abbreviation];
+  STATE_NAMES[name] = abbreviation;
+}

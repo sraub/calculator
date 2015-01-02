@@ -85,6 +85,16 @@ ComparisonTable.prototype.update = function(contract, alternate) {
           alternateFlight.hotelCost);
     }
 
+    // The locations are all listed in flight.perDiem, but need to be ordered
+    // such that it's origin, rest stop, destination.
+    for (var perDiemLocation in contractFlight.perDiem) {
+      contractPerDiemLocations.push(perDiemLocation);
+    }
+    for (var perDiemLocation in alternateFlight.perDiem) {
+      alternatePerDiemLocations.push(perDiemLocation);
+    }
+
+    /*
     if (contractFlight.restStopLocation &&
         contractFlight.restStopLocation !=
         contractFlight.destination) {
@@ -97,6 +107,7 @@ ComparisonTable.prototype.update = function(contract, alternate) {
     }
     contractPerDiemLocations.push(contractFlight.destination);
     alternatePerDiemLocations.push(alternateFlight.destination);
+    */
 
     // M & IE | contract city | cost | alternate city | cost
     //          contract city | cost | alternate city | cost (if any)

@@ -2,16 +2,7 @@ function PerDiemLookup() {
 }
 
 PerDiemLookup.prototype.getRateList_ = function(destination) {
-  var localityRegion = destination.split(', ');
-  if (localityRegion.length > 1) {
-    // The airport data uses state abbreviations, but the full name of the
-    // state is listed in the per-diem map, so convert the abbreviation to the
-    // full name.
-    var state = STATE_ABBREVIATIONS[localityRegion[1]];
-    if (state) {
-      destination = localityRegion[0] + ', ' + state;
-    }
-  }
+  var destination = normalizeState(destination);
   var perDiemList = PERDIEM_DATA[destination];
   if (!perDiemList) {
     // Ask the user to select the per-diem.

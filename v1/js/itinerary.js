@@ -30,9 +30,9 @@ CostData.prototype.addLayoverTime = function(layoverTime) {
 };
 
 CostData.prototype.setDestination = function(
-    destination, perDiem, perDiemRate) {
+    destination, perDiem, perDiemRate, opt_perDiemLocation) {
   this.destination = destination;
-  this.addPerDiem_(destination, perDiem, perDiemRate);
+  this.addPerDiem_(opt_perDiemLocation || destination, perDiem, perDiemRate);
   this.updateTotalCost_();
 };
 
@@ -79,16 +79,20 @@ function Itinerary(element) {
   $('.fare input', this.element_).focus();
 }
 
+Itinerary.prototype.getElement = function() {
+  return this.element_;
+};
+
+Itinerary.prototype.getDutyStation = function() {
+  return $('.duty-station').val();
+};
+
 Itinerary.prototype.addFlight = function() {
   var colorIndex = this.flights.length % 3 + 1;
   var flight = new Flight(this, false); //this.flights.length != 0);
   this.flights.push(flight);
   this.colorFlights();
   return flight;
-};
-
-Itinerary.prototype.getElement = function() {
-  return this.element_;
 };
 
 Itinerary.prototype.removeFlight = function(flight) {
@@ -181,7 +185,7 @@ Flight.prototype.remove = function() {
 
 Flight.prototype.updateDestination = function(destination) {
   $('.final-destination', this.element_).text(destination);
-  this.finalDestination_ = destination;
+  this.finalDestination_ = normalizeState(destination, true);
 //  $('.final-destination', this.element_).val(destination);
 };
 
@@ -286,7 +290,8 @@ Flight.prototype.computeCostWithRestStop_ = function(restStopIndex) {
     }
     var destination = i == this.legs.length - 1 ?
         this.getFinalDestination() : leg.getArrivalCity();
-    var date = leg.getArrivalDateLocal();
+    var returningHome = destination == this.itinerary_.getDutyStation();
+
     costData.addFlyingTime(leg.getFlyingTime());
 
     var layoverTime = 0;
@@ -298,7 +303,9 @@ Flight.prototype.computeCostWithRestStop_ = function(restStopIndex) {
 
     var hotel = 0;
     var perDiem = 0;
-    var perDiemRate = 0;
+    // If there is no rest stop, use 75% of the per diem values. If there is a
+    // rest stop, then 100% of the rest stop is used.
+    var perDiemRate = restStopIndex == -1 ? .75 : 1;
     var computedLayoverTime = 0;
     if (i == restStopIndex) {
       hotel = leg.getHotelRate();
@@ -316,16 +323,14 @@ Flight.prototype.computeCostWithRestStop_ = function(restStopIndex) {
       costData.addLayoverTime(layoverTime);
     }
 
-    if (i == this.legs.length - 1) {
+    // Add the final per-diem amount. If the flight returns the traveler to the
+    // duty station, then the per diem is computed at the place of origin.
+    if (returningHome && i == 0) {
+      perDiem = leg.getOriginPerDiemRate();
+      costData.setDestination(
+          destination, perDiem, perDiemRate, leg.getDepartureCity());
+    } else if (!returningHome && i == this.legs.length - 1) {
       perDiem = leg.getPerDiemRate();
-      // Add the final per-diem amount.
-      if (restStopIndex == -1) {
-        // There is no rest stop, so use .75 of the per diem values.
-        perDiemRate = .75;
-      } else {
-        // There is a rest stop, so use 1.0 of the per diem values.
-        perDiemRate = 1;
-      }
       costData.setDestination(destination, perDiem, perDiemRate);
     }
   }
@@ -440,6 +445,10 @@ Leg.prototype.getPerDiemRate = function() {
   return this.perDiemRate_;
 };
 
+Leg.prototype.getOriginPerDiemRate = function() {
+  return this.originPerDiemRate_;
+};
+
 Leg.prototype.setResponse = function(response) {
   this.response_ = response;
 
@@ -487,6 +496,10 @@ Leg.prototype.updateFlightInfo_ = function(index) {
   this.arrivalTimeUtc_ = parseTime(
       this.flightInfo_['arrivalTime'],
       this.arrivalAirport_['utcOffsetHours']);
+  var departureDateLocal = new Date(
+      this.departureTimeUtc_.getTime() +
+      this.departureTimeUtc_.getTimezoneOffset() * 60 * 1000 +
+      this.departureAirport_['utcOffsetHours'] * 60 * 60 * 1000);
   this.arrivalDateLocal_ = new Date(
       this.arrivalTimeUtc_.getTime() +
       this.arrivalTimeUtc_.getTimezoneOffset() * 60 * 1000 +
@@ -503,6 +516,15 @@ Leg.prototype.updateFlightInfo_ = function(index) {
   } else {
     // TODO(sraub): Fix unknown per diems.
     this.hotelRate_ = this.perDiemRate_ = 0;
+  }
+
+  perDiemRates = perDiemLookup.getRates(
+      departureCity, departureDateLocal.toLocaleDateString());
+  if (perDiemRates) {
+    this.originPerDiemRate_ = perDiemRates[1];
+  } else {
+    // TODO(sraub): Fix unknown per diems.
+    this.originPerDiemRate_ = 0;
   }
 
   $('input.departure', this.element_).val(departureCity);

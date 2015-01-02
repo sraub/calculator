@@ -53,6 +53,10 @@ function DestinationList(contractItinerary, alternateItinerary) {
     new Destination(itineraries, me, true);
   });
   new Destination(itineraries, this, false);
+
+  var dutyStationInput = $('.duty-station');
+  addPlaceAutocomplete(dutyStationInput);
+  dutyStationInput.focus();
 }
 
 DestinationList.prototype.colorFlights = function() {
@@ -60,4 +64,14 @@ DestinationList.prototype.colorFlights = function() {
     var colorIndex = i % 3 + 1;
     $(elem).removeClass('color1 color2 color3').addClass('color' + colorIndex);
   });
+};
+
+DestinationList.prototype.isInitialized = function() {
+  var destinations = $('#itinerary .final-destination').get();
+  for (var i = 0; i < destinations.length; ++i) {
+    if ($(destinations[i]).val() != '') {
+      return true;
+    }
+  }
+  return false;
 };
