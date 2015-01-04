@@ -11,6 +11,15 @@ PerDiemLookup.prototype.getRateList_ = function(destination) {
   return perDiemList;
 };
 
+PerDiemLookup.prototype.getRatesByAirportCode = function(airportCode, date) {
+  var perDiemLocation = AIRPORT_TO_PERDIEM_LOCATION[airportCode];
+  if (!perDiemLocation) {
+    window.console.log('Could not find per diem location for', airportCode);
+    return [0, 0];
+  }
+  return perDiemLookup.getRates(perDiemLocation, date);
+};
+
 /**
  * Returns the per diem costs for the destination on the given date. The costs
  * are returned as an array where the first value is the lodging rate and the
@@ -67,5 +76,5 @@ PerDiemLookup.prototype.getRates = function(destination, date) {
     }
   }
   window.console.log('Did not find date data', destination);
-  return null;
+  return [0, 0];
 };

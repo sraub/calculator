@@ -249,7 +249,10 @@ Flight.prototype.getComparisonData = function() {
   }
 
   var flightCostData = null;
-  for (var i = 0; i < this.legs.length; ++i) {
+  // The rest stop cannot occur at the final destination, only at intermediary
+  // stops.
+  // TODO(sraub): Check if this is true.
+  for (var i = 0; i < this.legs.length - 1; ++i) {
     var costData = this.computeCostWithRestStop_(i);
     if (!flightCostData || costData.totalCost <= flightCostData.totalCost) {
       flightCostData = costData;
@@ -486,10 +489,13 @@ Leg.prototype.setResponse = function(response) {
 
 Leg.prototype.updateFlightInfo_ = function(index) {
   this.flightInfo_ = this.response_['scheduledFlights'][index];
+
+  var arrivalAirportCode = this.flightInfo_['arrivalAirportFsCode'];
+  var departureAirportCode = this.flightInfo_['departureAirportFsCode'];
   this.arrivalAirport_ = ScheduleEngine.getAirportInfo(
-      this.response_, this.flightInfo_['arrivalAirportFsCode']);
+      this.response_, arrivalAirportCode);
   this.departureAirport_ = ScheduleEngine.getAirportInfo(
-      this.response_, this.flightInfo_['departureAirportFsCode']);
+      this.response_, departureAirportCode);
   this.departureTimeUtc_ = parseTime(
       this.flightInfo_['departureTime'],
       this.departureAirport_['utcOffsetHours']);
@@ -505,28 +511,17 @@ Leg.prototype.updateFlightInfo_ = function(index) {
       this.arrivalTimeUtc_.getTimezoneOffset() * 60 * 1000 +
       this.arrivalAirport_['utcOffsetHours'] * 60 * 60 * 1000);
 
+  var perDiemRates = perDiemLookup.getRatesByAirportCode(
+      arrivalAirportCode, this.arrivalDateLocal_.toLocaleDateString());
+  this.hotelRate_ = perDiemRates[0];
+  this.perDiemRate_ = perDiemRates[1];
+
+  perDiemRates = perDiemLookup.getRatesByAirportCode(
+      departureAirportCode, departureDateLocal.toLocaleDateString());
+  this.originPerDiemRate_ = perDiemRates[1];
+
   var departureCity = formatCity(this.departureAirport_, false);
   var arrivalCity = formatCity(this.arrivalAirport_, false);
-
-  var perDiemRates = perDiemLookup.getRates(
-      arrivalCity, this.arrivalDateLocal_.toLocaleDateString());
-  if (perDiemRates) {
-    this.hotelRate_ = perDiemRates[0];
-    this.perDiemRate_ = perDiemRates[1];
-  } else {
-    // TODO(sraub): Fix unknown per diems.
-    this.hotelRate_ = this.perDiemRate_ = 0;
-  }
-
-  perDiemRates = perDiemLookup.getRates(
-      departureCity, departureDateLocal.toLocaleDateString());
-  if (perDiemRates) {
-    this.originPerDiemRate_ = perDiemRates[1];
-  } else {
-    // TODO(sraub): Fix unknown per diems.
-    this.originPerDiemRate_ = 0;
-  }
-
   $('input.departure', this.element_).val(departureCity);
   $('input.arrival', this.element_).val(arrivalCity);
 };
