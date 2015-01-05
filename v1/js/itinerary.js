@@ -84,7 +84,7 @@ Itinerary.prototype.getElement = function() {
 };
 
 Itinerary.prototype.getDutyStation = function() {
-  return $('.duty-station').val();
+  return normalizeState($('.duty-station').val(), true);
 };
 
 Itinerary.prototype.addFlight = function() {
