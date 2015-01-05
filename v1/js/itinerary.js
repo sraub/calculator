@@ -293,7 +293,8 @@ Flight.prototype.computeCostWithRestStop_ = function(restStopIndex) {
     }
     var destination = i == this.legs.length - 1 ?
         this.getFinalDestination() : leg.getArrivalCity();
-    var returningHome = destination == this.itinerary_.getDutyStation();
+    var returningHome =
+        this.getFinalDestination() == this.itinerary_.getDutyStation();
 
     costData.addFlyingTime(leg.getFlyingTime());
 
@@ -330,8 +331,8 @@ Flight.prototype.computeCostWithRestStop_ = function(restStopIndex) {
     // duty station, then the per diem is computed at the place of origin.
     if (returningHome && i == 0) {
       perDiem = leg.getOriginPerDiemRate();
-      costData.setDestination(
-          destination, perDiem, perDiemRate, leg.getDepartureCity());
+      costData.setDestination(this.getFinalDestination(), perDiem, perDiemRate,
+          leg.getDepartureCity());
     } else if (!returningHome && i == this.legs.length - 1) {
       perDiem = leg.getPerDiemRate();
       costData.setDestination(destination, perDiem, perDiemRate);
