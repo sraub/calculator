@@ -111,15 +111,15 @@ ul.flight li {
 }
 .color1 ul.flight li,
 #itinerary input.final-destination.color1 {
-  border-left-color: #337ab7;
+  border-left-color: #225ea8;
 }
 .color2 ul.flight li,
 #itinerary input.final-destination.color2 {
-  border-left-color: #337ab7;
+  border-left-color: #41b6c4;
 }
 .color3 ul.flight li,
 #itinerary input.final-destination.color3 {
-  border-left-color: #337ab7;
+  border-left-color: #a1dab4;
 }
 
 /*
