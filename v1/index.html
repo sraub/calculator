@@ -39,7 +39,7 @@
       </button>
       <div class="navbar-brand">Travel Tool</div>
     </div>
-    <div id="navbar" rold="tablist" class="navbar-collapse collapse">
+    <div id="navbar" role="tablist" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <li role="presentation" class="active">
           <a href="#calculator" aria-controls="calculator" role="tab" data-toggle="tab">Calculator</a>
@@ -114,6 +114,7 @@
             <div class="bs-callout bs-callout-default">
               Add each flight in the itinerary. The destination should be the <i>final</i> destination, if that requires ground transportation. Layover and rest stop destinations should not be included. An itinerary may have one or more flight.
             </div>
+            <!--
             <h3>Duty Station</h3>
             <div class="instructions">Enter your regular duty station, even if you are not flying to or from that location.</div>
             <ul class="list-group">
@@ -123,7 +124,27 @@
             </ul>
             <h3>Destinations</h3>
             <div class="instructions">List all destinations, including a return. For example, if you are flying round-trip from Washington to Geneva, list "Geneva, Switzerland" and "Washington, DC". Do <u>not</u> include layovers or rest stops.</div>
+            -->
+            <ul class="nav nav-pills">
+              <li role="presentation" class="active">
+                <a data-toggle="pill" class="round-trip">Round-trip</a>
+              </li>
+              <li role="presentation">
+                <a data-toggle="pill" class="one-way">One-way</a>
+              </li>
+              <li role="presentation">
+                <a data-toggle="pill" class="multi-city">Multi-city</a>
+              </li>
+            </ul>
             <ul class="list-group destination-list">
+              <li class="list-group-item leg-list">
+                <div class="input-group" style="max-width: 487px">
+                  <input class="form-control origin" type="text" placeholder="Enter origin">
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                  </span>
+                </div>
+              </li>
             </ul>
             <button type="button" class="btn btn-default btn-sm add-destination">
               <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Add Destination
@@ -370,7 +391,12 @@
 
 <!-- Begin itinerary template -->
 <li id="destination-template" class="list-group-item leg-list">
-  <input class="form-control final-destination" type="text" placeholder="Enter final destination">
+  <div class="input-group">
+    <input class="form-control final-destination" type="text" placeholder="Enter final destination">
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+    </span>
+  </div>
   <span tabIndex=-1 class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 </li>
 <!-- End itinerary template -->
@@ -379,7 +405,7 @@
 <div id="flight-template">
   <ul class="list-group flight">
     <li class="list-group-item">
-      <span class="final-destination"></span>
+      <span class="origin"></span> to <span class="final-destination"></span>
        <!--
       <span class="input-group">
         <input type="text" readonly class="form-control final-destination" placeholder="Enter final destination" value="Richmond, NSW, Australia">
@@ -490,6 +516,14 @@ var destinationsList = new DestinationList(
 var exemption = new Exemption($('#exemption'));
 var comparisonTable = new ComparisonTable($('#comparison .table > tbody'));
 
+$('.nav-pills > li > a[href="#contract"').click(function() {
+  contractItinerary.update(destinationsList.getDestinations(),
+      destinationsList.getActiveDutyStation());
+});
+$('.nav-pills > li > a[href="#alternate"').click(function() {
+  alternateItinerary.update(destinationsList.getDestinations(),
+      destinationsList.getActiveDutyStation());
+});
 $('.nav-pills > li > a[href="#comparison"').click(function() {
   comparisonTable.update(contractItinerary, alternateItinerary);
 });
@@ -518,6 +552,21 @@ $('#contract .continue-button').click(function() {
   $('.nav-pills a[href="#alternate"]').tab('show');
 });
 */
+
+$('#itinerary .round-trip').click(function() {
+  destinationsList.setTripType(TripType.ROUND_TRIP);
+  $('#itinerary .add-destination').hide();
+});
+
+$('#itinerary .one-way').click(function() {
+  destinationsList.setTripType(TripType.ONE_WAY);
+  $('#itinerary .add-destination').hide();
+});
+
+$('#itinerary .multi-city').click(function() {
+  destinationsList.setTripType(TripType.MULTI_CITY);
+  $('#itinerary .add-destination').show();
+});
 
 // TODO(sraub): Show and hide these warnings as necessary.
 $('.incomplete').hide();

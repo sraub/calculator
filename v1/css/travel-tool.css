@@ -53,10 +53,19 @@ span.help a {
   background-color: #fff;
   cursor: auto;
 }
+#itinerary .nav-pills {
+  margin-bottom: 10px;
+}
+#itinerary .add-destination {
+  display: none;
+}
+.origin,
 .final-destination,
 .duty-station {
-  margin-right: 7px;
   width: 450px !important;
+}
+ul.flight li.leg-list input {
+  margin-right: 7px;
 }
 #calculator .flight input {
   border-radius: 0px;
@@ -64,6 +73,9 @@ span.help a {
 #calculator .fare {
   max-width: 200px;
   margin-bottom: 20px;
+}
+#itinerary .leg-list {
+  display: table;
 }
 #calculator .leg-list input,
 #calculator .leg-list select {
@@ -90,6 +102,9 @@ span.help a {
 #calculator .arrival {
   width: 150px;
 }
+#calculator .leg-list .input-group {
+  margin-right: 20px;
+}
 /* Remove row */
 #calculator .leg-list .remove-row {
   float: right;
@@ -97,10 +112,25 @@ span.help a {
 #calculator .leg-list span.glyphicon-remove {
   color: #555;
   line-height: 35px;
+  display: table-cell;
+  vertical-align: middle;
+}
+#calculator .destination-list span.glyphicon-home {
+  color: #ccc;
+}
+#calculator .destination-list span.glyphicon-home.active {
+  color: #337ab7;
+}
+#calculator .destination-list span.glyphicon-home:hover {
+  color: #777;
+}
+#calculator .destination-list span.glyphicon-home.active:hover {
+  color: #337ab7;
 }
 #calculator .leg-list span.glyphicon-remove:hover {
   color: black;
 }
+#calculator span.origin,
 #calculator span.final-destination {
   font-weight: bold;
 }
@@ -174,6 +204,7 @@ td.cost {
   border: none;
   padding-left: 0px;
 }
+#itinerary input.origin,
 #itinerary input.final-destination,
 #itinerary input.duty-station {
   border-left: 2px solid #ccc;
@@ -239,6 +270,10 @@ td.cost {
     width: 100%;
     font-size: 12px;
   }
+}
+
+#itinerary .nav li a {
+  padding: 5px 10px;
 }
 
 /*

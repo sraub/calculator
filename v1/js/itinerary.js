@@ -83,8 +83,37 @@ Itinerary.prototype.getElement = function() {
   return this.element_;
 };
 
+Itinerary.prototype.update = function(destinationList, dutyStation) {
+  if (!destinationList.length) {
+    return;
+  }
+  var origin = normalizeState(destinationList[0], true);
+  for (var i = 1; i < destinationList.length; ++i) {
+    var destination = normalizeState(destinationList[i], true);
+    if (this.flights.length < i) {
+      this.addFlight();
+    }
+    var flight = this.flights[i - 1];
+    if (flight.getOrigin() != origin) {
+      flight.updateOrigin(origin);
+    }
+    if (flight.getFinalDestination() != destination) {
+      flight.updateDestination(destination);
+    }
+    origin = destination;
+  }
+  for (var i = destinationList.length; i <= this.flights.length; ++i) {
+    this.flights[i - 1].remove();
+  }
+  this.activeDutyStation_ = dutyStation && normalizeState(dutyStation);
+};
+
 Itinerary.prototype.getDutyStation = function() {
-  return normalizeState($('.duty-station').val(), true);
+  if ($('.duty-station').val()) {
+    return normalizeState($('.duty-station').val(), true);
+  } else {
+    return this.activeDutyStation_;
+  }
 };
 
 Itinerary.prototype.addFlight = function() {
@@ -186,7 +215,11 @@ Flight.prototype.remove = function() {
 Flight.prototype.updateDestination = function(destination) {
   $('.final-destination', this.element_).text(destination);
   this.finalDestination_ = normalizeState(destination, true);
-//  $('.final-destination', this.element_).val(destination);
+};
+
+Flight.prototype.updateOrigin = function(origin) {
+  $('.origin', this.element_).text(origin);
+  this.origin_ = origin;
 };
 
 Flight.prototype.getElement = function() {
@@ -203,6 +236,10 @@ Flight.prototype.removeLeg = function(leg) {
 };
 
 Flight.prototype.getOrigin = function() {
+  return this.origin_;
+};
+
+Flight.prototype.getDepartureCity = function() {
   return this.legs[0].getDepartureCity();
 };
 
@@ -347,7 +384,13 @@ Flight.prototype.getCostData = function() {
   }
 
   var flightCostData = null;
-  for (var i = 0; i < this.legs.length; ++i) {
+  var numLegs = this.legs.length - 1;
+  // If you are returning to your duty station, then you cannot take a rest stop
+  // at the final destination. For that reason, consider only n - 1 legs.
+  if (this.getFinalDestination() == this.itinerary_.getDutyStation()) {
+    numLegs = this.legs.length - 2;
+  }
+  for (var i = 0; i <= numLegs; ++i) {
     var costData = this.computeCostWithRestStop_(i);
     if (!flightCostData || costData.totalCost <= flightCostData.totalCost) {
       flightCostData = costData;
