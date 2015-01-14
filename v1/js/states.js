@@ -50,7 +50,9 @@ var STATE_ABBREVIATIONS = {
   'WI': 'Wisconsin',
   'WY': 'Wyoming',
   'AS': 'American Samoa',
-  'DC': 'District of Columbia',
+  // We never refer to DC as the District of Columbia in this system, so keep it
+  // here for completeness, but just map it to itself.
+  'DC': 'DC',
   'FM': 'Federated States of Micronesia',
   'GU': 'Guam',
   'MH': 'Marshall Islands',
