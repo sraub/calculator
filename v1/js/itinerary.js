@@ -235,6 +235,15 @@ Flight.prototype.removeLeg = function(leg) {
   }
 };
 
+Flight.prototype.getPreviousArrivalAirport = function(leg) {
+  for (var i = this.legs.length - 1; i >= 1; --i) {
+    if (leg == this.legs[i]) {
+      return this.legs[i - 1].getArrivalAirport();
+    }
+  }
+  return null;
+};
+
 Flight.prototype.getOrigin = function() {
   return this.origin_;
 };
@@ -409,6 +418,7 @@ function Leg(flight, allowRemoval) {
   var element = this.element_ = $('#leg-template').clone();
   element.removeAttr('id');
   this.response_ = null;
+  this.flight_ = flight;
 
   var me = this;
   $('.listen', this.element_).change(function() {
@@ -511,13 +521,19 @@ Leg.prototype.setResponse = function(response) {
   }
 
   // Add all of the flights to the select control.
+  var previousAirport = this.flight_.getPreviousArrivalAirport(this);
+  var selected = -1;
   for (var i = 0; i < flights.length; ++i) {
     var airportCode = flights[i]['departureAirportFsCode'];
     var airportInfo = ScheduleEngine.getAirportInfo(
         this.response_, airportCode);
-    $('select.departure', this.element_).append(
-        '<option value="' + i + '">' + formatCity(airportInfo, true) +
-        '</option>');
+    var departureCity = formatCity(airportInfo, true);
+    var option = $('<option></option>').attr('value', i).text(departureCity);
+    if (previousAirport && previousAirport['fs'] == airportCode) {
+      option.attr('selected', 'selected');
+      selected = i;
+    }
+    $('select.departure', this.element_).append(option);
   }
 
   if (flights.length == 1) {
@@ -525,7 +541,11 @@ Leg.prototype.setResponse = function(response) {
     $('input.departure', this.element_).show();
     $('select.departure', this.element_).hide();
   } else if (flights.length > 1) {
-    $('input.arrival', this.element_).val('');
+    if (selected != -1) {
+      this.updateFlightInfo_(selected);
+    } else {
+      $('input.arrival', this.element_).val('');
+    }
     $('input.departure', this.element_).hide();
     $('select.departure', this.element_).show();
   }
