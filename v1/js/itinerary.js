@@ -541,7 +541,8 @@ Leg.prototype.setResponse = function(response) {
         this.response_, airportCode);
     var departureCity = formatCity(airportInfo, true);
     var option = $('<option></option>').attr('value', i).text(departureCity);
-    if (previousAirport && previousAirport['fs'] == airportCode) {
+    if (previousAirport && previousAirport['fs'] == airportCode ||
+        this.flight_.getOrigin() == formatCity(airportInfo, false)) {
       option.attr('selected', 'selected');
       selected = i;
     }
