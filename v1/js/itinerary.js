@@ -62,6 +62,12 @@ CostData.prototype.updateTotalCost_ = function() {
       this.hotelCost + this.perDiemCost;
 };
 
+var fareTypes = [
+  'Contract (-CA)',
+  'Government (-DG)',
+  'Restricted public',
+  'Unrestricted public'
+];
 
 function Itinerary(element) {
   this.element_ = element;
@@ -75,6 +81,12 @@ function Itinerary(element) {
 
   this.addFlight();
   */
+
+  // Add the fare types to the select.
+  $.each(fareTypes, function(i, fareType) {
+    var option = $('<option></option>').attr('value', i).text(fareType);
+    $('.fare-type', element).append(option);
+  });
 
   $('.fare input', this.element_).focus();
 }

@@ -70,9 +70,17 @@ ul.flight li.leg-list input {
 #calculator .flight input {
   border-radius: 0px;
 }
-#calculator .fare {
-  max-width: 200px;
+#calculator .fare-row {
+  display: table;
   margin-bottom: 20px;
+}
+#calculator .fare-row > div {
+  display: table-cell;
+  padding-right: 10px;
+  vertical-align: top;
+}
+#calculator .input-group.fare {
+  max-width: 200px;
 }
 #itinerary .leg-list {
   display: table;
