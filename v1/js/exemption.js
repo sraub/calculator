@@ -97,7 +97,7 @@ Exemption.prototype.update = function(contract, alternate) {
       } else {
         $('.lodging-cost', details).text('');
         $('.perdiem-cost', details).text('');
-        $('.layover-time', details).text(formatDuration(flightCostData.layoverTime));
+        $('.layover-time', details).text(formatDuration(flightCostData.layovers[destination]));
       }
       /*
       if (flightCostData.restStopLocation == destination) {

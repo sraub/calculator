@@ -8,6 +8,7 @@ function CostData(origin) {
   this.flyingCost = 0;
   this.layoverTime = 0;
   this.layoverCost = 0;
+  this.layovers = {};
   this.destination = '';
   this.restStopLocation = 0;
   this.restStopTime = 0;
@@ -23,7 +24,8 @@ CostData.prototype.addFlyingTime = function(flyingTime) {
   this.updateTotalCost_();
 };
 
-CostData.prototype.addLayoverTime = function(layoverTime) {
+CostData.prototype.addLayoverTime = function(layoverTime, layoverCity) {
+  this.layovers[layoverCity] = layoverTime;
   this.layoverTime += layoverTime;
   this.layoverCost = this.layoverTime * PER_HOUR_RATE;
   this.updateTotalCost_();
@@ -352,6 +354,8 @@ Flight.prototype.getComparisonData = function() {
 };
 
 Flight.prototype.computeCostWithRestStop_ = function(restStopIndex) {
+  var finalDestinationPerDiemRates = perDiemLookup.getRates(
+      this.getFinalDestination(), this.getArrivalDate());
   var costData = new CostData(this.getOrigin());
   for (var i = 0; i < this.legs.length; ++i) {
     var leg = this.legs[i];
@@ -374,34 +378,36 @@ Flight.prototype.computeCostWithRestStop_ = function(restStopIndex) {
 
     var hotel = 0;
     var perDiem = 0;
-    // If there is no rest stop, use 75% of the per diem values. If there is a
-    // rest stop, then 100% of the rest stop is used.
-    var perDiemRate = restStopIndex == -1 ? .75 : 1;
     var computedLayoverTime = 0;
     if (i == restStopIndex) {
-      hotel = leg.getHotelRate();
-      perDiem = leg.getPerDiemRate();
       if (i == this.legs.length - 1) {
         // The final destination is the rest stop.
         computedLayoverTime = MAXIMUM_DESTINATION_REST_STOP_HOURS;
+        hotel = finalDestinationPerDiemRates[0];
+        perDiem = finalDestinationPerDiemRates[1];
       } else {
         // An intermediary location is the rest stop.
         computedLayoverTime = MAXIMUM_INTERMEDIARY_REST_STOP_HOURS;
+        hotel = leg.getHotelRate();
+        perDiem = leg.getPerDiemRate();
       }
       costData.setRestStop(destination, computedLayoverTime, hotel, perDiem);
     } else {
       // This is not a rest stop, so just compute the regular layover time.
-      costData.addLayoverTime(layoverTime);
+      costData.addLayoverTime(layoverTime, destination);
     }
 
     // Add the final per-diem amount. If the flight returns the traveler to the
     // duty station, then the per diem is computed at the place of origin.
+    // If there is no rest stop, use 75% of the per diem values. If there is a
+    // rest stop, then 100% of the rest stop is used.
+    var perDiemRate = restStopIndex == -1 ? .75 : 1;
     if (returningHome && i == 0) {
       perDiem = leg.getOriginPerDiemRate();
       costData.setDestination(this.getFinalDestination(), perDiem, perDiemRate,
           leg.getDepartureCity());
     } else if (!returningHome && i == this.legs.length - 1) {
-      perDiem = leg.getPerDiemRate();
+      perDiem = finalDestinationPerDiemRates[1];
       costData.setDestination(destination, perDiem, perDiemRate);
     }
   }
