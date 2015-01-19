@@ -172,7 +172,11 @@ Itinerary.prototype.getCostData = function() {
     worktime: 0,
     perDiem: 0,
     hotel: 0,
-    total: 0
+    total: 0,
+    flyingTime: 0,
+    layoverTime: 0,
+    restStopTime: 0,
+    travelTime: 0
   };
   for (var i = 0; i < this.flights.length; ++i) {
     var flightCostData = this.flights[i].getCostData();
@@ -181,6 +185,11 @@ Itinerary.prototype.getCostData = function() {
     costData.perDiem += flightCostData.perDiemCost;
     costData.hotel += flightCostData.hotelCost;
     costData.total += flightCostData.totalCost;
+    costData.flyingTime += flightCostData.flyingTime;
+    costData.layoverTime += flightCostData.layoverTime;
+    costData.restStopTime += flightCostData.restStopTime;
+    costData.travelTime += flightCostData.flyingTime +
+        flightCostData.layoverTime + flightCostData.restStopTime;
   }
   return costData;
 };

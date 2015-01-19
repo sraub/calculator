@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Travel Tool</title>
 
+    <!-- Begin Offline jQuery/Bootstrap -->
+    <script src="../jquery-ui-1.11.2/external/jquery/jquery.js"></script>
+    <script src="../jquery-ui-1.11.2/jquery-ui.js"></script>
+    <link rel="stylesheet" href="../jquery-ui-1.11.2/jquery-ui.css">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap-theme.min.css">
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <!-- End Offline jQuery / Bootstrap-->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 
@@ -158,7 +167,7 @@
         </div>
 
         <!-- Begin Contract Fare tab -->
-        <div role="tabpanel" class="tab-pane no-print" id="contract">
+        <div role="tabpanel" class="tab-pane no-print fare-details" id="contract">
           <div class="panel-body">
             <!-- Instructions -->
             <div class="bs-callout bs-callout-default">
@@ -198,7 +207,7 @@
         </div>
 
         <!-- Begin Alternate Fare tab -->
-        <div role="tabpanel" class="tab-pane no-print" id="alternate">
+        <div role="tabpanel" class="tab-pane no-print fare-details" id="alternate">
           <div class="panel-body">
             <!-- Instructions -->
             <div class="bs-callout bs-callout-default">
@@ -306,7 +315,7 @@
               </tbody>
             </table>
             <p class="lead">Comparison</p>
-            <table class="table table-condensed comparison">
+            <table class="table table-condensed comparison cost">
               <thead>
                 <tr>
                   <th>Cost</th>
@@ -320,11 +329,13 @@
                   <td class="contract cost"></td>
                   <td class="alternate cost"></td>
                 </tr>
+                <!--
                 <tr class="lost-worktime-row">
                   <td>Lost Worktime</td>
                   <td class="contract cost"></td>
                   <td class="alternate cost"></td>
                 </tr>
+                -->
                 <tr class="perdiem-row">
                   <td>M & IE</td>
                   <td class="contract cost"></td>
@@ -336,7 +347,38 @@
                   <td class="alternate cost"></td>
                 </tr>
                 <tr class="total-row">
-                  <td>Total</td>
+                  <td>Total cost</td>
+                  <td class="contract cost"></td>
+                  <td class="alternate cost"></td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-condensed comparison time">
+              <thead>
+                <tr>
+                  <th>Travel Time</th>
+                  <th>Contract</th>
+                  <th>Alternate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="flying-row">
+                  <td>Flying</td>
+                  <td class="contract cost"></td>
+                  <td class="alternate cost"></td>
+                </tr>
+                <tr class="layover-row">
+                  <td>Layover</td>
+                  <td class="contract cost"></td>
+                  <td class="alternate cost"></td>
+                </tr>
+                <tr class="rest-stop-row">
+                  <td>Rest stop</td>
+                  <td class="contract cost"></td>
+                  <td class="alternate cost"></td>
+                </tr>
+                <tr class="total-row">
+                  <td>Total time</td>
                   <td class="contract cost"></td>
                   <td class="alternate cost"></td>
                 </tr>

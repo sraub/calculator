@@ -70,7 +70,7 @@ ul.flight li.leg-list input {
 #calculator .flight input {
   border-radius: 0px;
 }
-#calculator .fare-row {
+#calculator .fare-details .fare-row {
   display: table;
   margin-bottom: 20px;
 }
@@ -196,6 +196,7 @@ td.cost {
 }
 #exemption table.comparison th {
   text-align: center;
+  width: 33%;
 }
 #exemption table.comparison th:first {
   text-align: left !important;

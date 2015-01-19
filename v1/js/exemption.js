@@ -27,11 +27,17 @@ Exemption.prototype.update = function(contract, alternate) {
   }
 
   // Comparison
-  var comparison = $('.comparison', this.element_);
+  var costComparison = $('.comparison.cost', this.element_);
   function setComparisonCost(selector, contractCost, alternateCost) {
-    var parentSelector = $(selector, comparison);
+    var parentSelector = $(selector, costComparison);
     $('td.contract', parentSelector).text(formatDollars(contractCost));
     $('td.alternate', parentSelector).text(formatDollars(alternateCost));
+  }
+  var timeComparison = $('.comparison.time', this.element_);
+  function setComparisonTime(selector, contractTime, alternateTime) {
+    var parentSelector = $(selector, timeComparison);
+    $('td.contract', parentSelector).text(formatDuration(contractTime));
+    $('td.alternate', parentSelector).text(formatDuration(alternateTime));
   }
 
   var contractCostData = contract.getCostData();
@@ -44,7 +50,19 @@ Exemption.prototype.update = function(contract, alternate) {
   setComparisonCost('.lodging-row',
       contractCostData.hotel, alternateCostData.hotel);
   setComparisonCost('.total-row',
-      contract.getTotalCost(), alternate.getTotalCost());
+      contractCostData.total - contractCostData.worktime +
+          contractCostData.fare,
+      alternateCostData.total - alternateCostData.worktime +
+          alternateCostData.fare);
+//      contract.getTotalCost(), alternate.getTotalCost());
+  setComparisonTime('.flying-row',
+      contractCostData.flyingTime, alternateCostData.flyingTime);
+  setComparisonTime('.layover-row',
+      contractCostData.layoverTime, alternateCostData.layoverTime);
+  setComparisonTime('.rest-stop-row',
+      contractCostData.restStopTime, alternateCostData.restStopTime);
+  setComparisonTime('.total-row',
+      contractCostData.travelTime, alternateCostData.travelTime);
 
   function fillItineraryDetails(itinerary, parentElement) {
     function addDetailsRow(index, rowspan, destination, flightNumber,
