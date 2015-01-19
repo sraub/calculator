@@ -30,14 +30,24 @@ Exemption.prototype.update = function(contract, alternate) {
   var costComparison = $('.comparison.cost', this.element_);
   function setComparisonCost(selector, contractCost, alternateCost) {
     var parentSelector = $(selector, costComparison);
-    $('td.contract', parentSelector).text(formatDollars(contractCost));
-    $('td.alternate', parentSelector).text(formatDollars(alternateCost));
+    if (contractCost || alternateCost) {
+      $('td.contract', parentSelector).text(formatDollars(contractCost));
+      $('td.alternate', parentSelector).text(formatDollars(alternateCost));
+      $(parentSelector).show();
+    } else {
+      $(parentSelector).hide();
+    }
   }
   var timeComparison = $('.comparison.time', this.element_);
   function setComparisonTime(selector, contractTime, alternateTime) {
     var parentSelector = $(selector, timeComparison);
-    $('td.contract', parentSelector).text(formatDuration(contractTime));
-    $('td.alternate', parentSelector).text(formatDuration(alternateTime));
+    if (contractTime || alternateTime) {
+      $('td.contract', parentSelector).text(formatDuration(contractTime));
+      $('td.alternate', parentSelector).text(formatDuration(alternateTime));
+      $(parentSelector).show();
+    } else {
+      $(parentSelector).hide();
+    }
   }
 
   var contractCostData = contract.getCostData();
@@ -82,13 +92,18 @@ Exemption.prototype.update = function(contract, alternate) {
       if (flightCostData.restStopLocation == destination) {
         $('.lodging-cost', details).text(formatDollars(flightCostData.hotelCost));
         $('.perdiem-cost', details).text(formatDollars(flightCostData.perDiem[destination]));
+        $('.layover-time', details).text(formatDuration(flightCostData.restStopTime) + ' *');
+        $('.rest-stop-footnote').show();
       } else {
         $('.lodging-cost', details).text('');
         $('.perdiem-cost', details).text('');
+        $('.layover-time', details).text(formatDuration(flightCostData.layoverTime));
       }
+      /*
       if (flightCostData.restStopLocation == destination) {
         $('.lodging-cost', details).text(formatDollars(flightCostData.hotelCost));
       }
+      */
       if (flightCostData.destination == destination) {
         $('.perdiem-cost', details).text(formatDollars(flightCostData.perDiem[destination]));
       }
@@ -113,9 +128,9 @@ Exemption.prototype.update = function(contract, alternate) {
     }
   }
 
-  // Contract Fare
-  fillItineraryDetails(contract, $('.contract-details tbody').empty());
+  $('.rest-stop-footnote').hide();
 
-  // Alternate Fare
+  // Contract and Alternate Fare itineraries.
+  fillItineraryDetails(contract, $('.contract-details tbody').empty());
   fillItineraryDetails(alternate, $('.alternate-details tbody').empty());
 };
