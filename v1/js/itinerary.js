@@ -470,6 +470,7 @@ function Leg(flight, allowRemoval) {
   }
   element.insertBefore($('li:last-child', flight.getElement()));
 
+  addAirlineAutocomplete($('.carrier', element));
   $('.carrier', element).focus();
 }
 
