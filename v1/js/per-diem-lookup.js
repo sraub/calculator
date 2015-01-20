@@ -32,6 +32,9 @@ PerDiemLookup.prototype.getRatesByAirportCode = function(airportCode, date) {
  * @private
  */
 PerDiemLookup.prototype.getRates = function(destination, date) {
+  if (!destination || !date) {
+    return;
+  }
   var month, day;
   var match = date.match(/(\d\d?)[-\/](\d\d?)[-\/]\d{4}/) ||
     date.match(/\d{4}[-\/](\d{1,2})[-\/](\d{1,2})/);
