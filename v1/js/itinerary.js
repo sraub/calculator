@@ -119,8 +119,12 @@ Itinerary.prototype.update = function(destinationList, dutyStation) {
   for (var i = destinationList.length; i <= this.flights.length; ++i) {
     this.flights[i - 1].remove();
   }
-  this.activeDutyStation_ = dutyStation && normalizeState(dutyStation);
+  this.updateDutyStation(dutyStation);
 };
+
+Itinerary.prototype.updateDutyStation = function(dutyStation) {
+  this.activeDutyStation_ = dutyStation && normalizeState(dutyStation, true);
+}
 
 Itinerary.prototype.getDutyStation = function() {
   if ($('.duty-station').val()) {

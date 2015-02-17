@@ -153,6 +153,9 @@ DestinationList.prototype.updateActiveDutyStation = function(value) {
   // Iterate over the final destinations. Check their  
   this.activeDutyStation_ = value;
   this.checkActiveDutyStation();
+  $.each(this.itineraries_, function(i, itinerary) {
+    itinerary.updateDutyStation(value);
+  });
 };
 
 DestinationList.prototype.checkActiveDutyStation = function() {
