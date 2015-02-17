@@ -91,6 +91,85 @@ function Itinerary(element) {
   });
 
   $('.fare input', this.element_).focus();
+
+  var me = this;
+  $('.modal #close').click(function() {
+    if (!$(me.element_).hasClass('active')) {
+      return;
+    }
+    var text = $('.modal #flight-data').val();
+    var parsers = [E2Parser1, KayakParser];
+    var parser = null;
+    for (var i = 0; i < parsers.length; ++i) {
+      parser = parsers[i].apply(null, [text]);
+      if (parser.getNumFlights()) {
+        break;
+      }
+    }
+
+    if (parser.fare) {
+      $('.fare input', me.element_).val(Math.round(parser.fare));
+    }
+
+    // Now iterate over the parser's flights and try to squeeze them into the
+    // itinerary.
+    var flightIndex = 0;
+    var numLegs = 0;
+    for (var i = 0; i < parser.getNumFlights(); ++i) {
+      if (flightIndex >= me.flights.length) {
+        me.flights.push(new Flight(me, false, false));
+      }
+      var flight = me.flights[flightIndex];
+      var flightData = parser.getFlightData(i);
+      var inferFlightBreaks = flightData.continuing == null;
+      var lastLeg = flightData.continuing == false;
+
+      if (inferFlightBreaks) {
+        if (numLegs != 0 && flightIndex != me.flights.length - 1) {
+          var departureLocation = flightData.departureAirport && normalizeState(
+              AIRPORT_TO_PERDIEM_LOCATION[flightData.departureAirport], true);
+          var arrivalLocation = flightData.arrivalAirport && normalizeState(
+              AIRPORT_TO_PERDIEM_LOCATION[flightData.arrivalAirport], true);
+          var nextFlight = me.flights[flightIndex + 1];
+          // If the departure location is the known origin of this flight, then
+          // this leg is part of this flight. Otherwise, a number of conditions
+          // can be used to determine if this leg should belong to the *next*
+          // flight.
+          // 1. The origin of the next flight is the departure location.
+          // 2. The final destination of the next flight is the arrival
+          // location.
+          // 3. This flight departs more than 24 hours after the last flight.
+          // Note that the parser does not have time data, so we check that the
+          // departure dates are two full days apart. This is incredibly
+          // inexact.
+          // TODO(sraub): Extend the parser to include time where possible and
+          // then use 24 hours.
+          // TODO(sraub): Handle the case where a single flight actually has an
+          // intermediary stop (e.g. Lufthansa 598/United 9112).
+          if (flight.getOrigin() != departureLocation &&
+              (nextFlight.getOrigin() === departureLocation ||
+               nextFlight.getFinalDestination() === arrivalLocation)) {
+            flight = me.flights[++flightIndex];
+            numLegs = 0;
+          }
+        }
+        // If we know the arrival airport and we can see that its location
+        // matches the final destination of the current flight, then we know
+        // that this is the last leg of the current flight.
+        lastLeg = flight.getFinalDestination() === arrivalLocation;
+      }
+
+      flight.updateLeg(numLegs,
+          flightData.carrier, flightData.flightNumber,
+          flightData.departureDate, flightData.departureAirport);
+      ++numLegs;
+
+      if (lastLeg) {
+        ++flightIndex;
+        numLegs = 0;
+      }
+    }
+  });
 }
 
 Itinerary.prototype.getElement = function() {
@@ -124,7 +203,7 @@ Itinerary.prototype.update = function(destinationList, dutyStation) {
 
 Itinerary.prototype.updateDutyStation = function(dutyStation) {
   this.activeDutyStation_ = dutyStation && normalizeState(dutyStation, true);
-}
+};
 
 Itinerary.prototype.getDutyStation = function() {
   if ($('.duty-station').val()) {
@@ -136,7 +215,7 @@ Itinerary.prototype.getDutyStation = function() {
 
 Itinerary.prototype.addFlight = function() {
   var colorIndex = this.flights.length % 3 + 1;
-  var flight = new Flight(this, false); //this.flights.length != 0);
+  var flight = new Flight(this, false, true);
   this.flights.push(flight);
   this.colorFlights();
   return flight;
@@ -202,7 +281,7 @@ Itinerary.prototype.getCostData = function() {
 
 
 
-function Flight(itinerary, allowRemoval) {
+function Flight(itinerary, allowRemoval, giveFocus) {
   this.itinerary_ = itinerary;
   this.finalDestination_ = '';
   this.element_ = $('#flight-template').clone();
@@ -213,7 +292,7 @@ function Flight(itinerary, allowRemoval) {
 
   var me = this;
   $('.add-leg', this.element_).click(function() {
-    me.legs.push(new Leg(me, true));
+    me.legs.push(new Leg(me, true, true));
   });
 
   /*
@@ -228,11 +307,16 @@ function Flight(itinerary, allowRemoval) {
   */
   $('#flight-placeholder', itinerary.getElement()).append(this.element_);
 
-  this.legs = [new Leg(this, false)];
-
-//  $('.final-destination', this.element_).focus();
-  $('.carrier', this.element_).focus();
+  this.legs = [new Leg(this, false, giveFocus)];
 }
+
+Flight.prototype.updateLeg = function(
+    index, carrier, flightNumber, date, departureAirport) {
+  if (index >= this.legs.length) {
+    this.legs.push(new Leg(this, true, false));
+  }
+  this.legs[index].update(carrier, flightNumber, date, departureAirport);
+};
 
 Flight.prototype.remove = function() {
   this.element_.remove();
@@ -445,7 +529,7 @@ Flight.prototype.getTotalCost = function() {
 };
 
 
-function Leg(flight, allowRemoval) {
+function Leg(flight, allowRemoval, giveFocus) {
   var element = this.element_ = $('#leg-template').clone();
   element.removeAttr('id');
   this.response_ = null;
@@ -475,8 +559,29 @@ function Leg(flight, allowRemoval) {
   element.insertBefore($('li:last-child', flight.getElement()));
 
   addAirlineAutocomplete($('.carrier', element));
-  $('.carrier', element).focus();
+  if (giveFocus) {
+    $('.carrier', element).focus();
+  }
 }
+
+Leg.prototype.update = function(carrier, flightNumber, date, departureAirport) {
+  this.knownDepartureAirport_ = departureAirport;
+  $('.carrier', this.element_).val(AIRLINES_TO_CODE[carrier]);
+  $('.flight-number', this.element_).val(flightNumber);
+  var month = date.getMonth() + 1;
+  if (month < 10) {
+    month = '0' + month;
+  }
+  var day = date.getDate();
+  if (day < 10) {
+    day = '0' + day;
+  }
+  var formattedDate = date.getFullYear() + '-' + month + '-' + day;
+  $('.date', this.element_).val(formattedDate);
+  // Trigger a "change" event on one of the elements in order to make the
+  // data request.
+  $('.date', this.element_).change();
+};
 
 Leg.prototype.getCarrier = function() {
   return $('input.carrier', this.element_).val();
@@ -561,8 +666,14 @@ Leg.prototype.setResponse = function(response) {
         this.response_, airportCode);
     var departureCity = formatCity(airportInfo, true);
     var option = $('<option></option>').attr('value', i).text(departureCity);
+    // If this is the first airport, then check if it matches the known airport
+    // or the flight's origin city.
+    // If this is not the first airport, then check if the airport matches the
+    // previous airport code.
     if (previousAirport && previousAirport['fs'] == airportCode ||
-        this.flight_.getOrigin() == formatCity(airportInfo, false)) {
+        !previousAirport && (
+          this.knownDepartureAirport_ == airportCode ||
+          this.flight_.getOrigin() == formatCity(airportInfo, false))) {
       option.attr('selected', 'selected');
       selected = i;
     }

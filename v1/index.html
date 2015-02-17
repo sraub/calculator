@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Travel Tool</title>
 
+
+    <!-- jQuery/Bootstrap -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -190,6 +190,9 @@
             </button>
             -->
             <div>
+              <button type="button" class="btn btn-default btn-sm copy-and-paste">
+                <span class="glyphicon glyphicon-paste" aria-hidden="true"></span> Paste flight data
+              </button>
               <button type="button" class="btn btn-default btn-sm continue-button">
                 Continue <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
               </button>
@@ -230,6 +233,9 @@
             </button>
             -->
             <div>
+              <button type="button" class="btn btn-default btn-sm copy-and-paste">
+                <span class="glyphicon glyphicon-paste" aria-hidden="true"></span> Paste flight data
+              </button>
               <button type="button" class="btn btn-default btn-sm continue-button">
                 Continue <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
               </button>
@@ -545,10 +551,28 @@
 </div>
 <!-- End hidden templates -->
 
+<div class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Paste itinerary from E2 Solutions</h4>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" id="flight-data"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="css/print.css">
 <script type="text/javascript" src="js/airlines.js"></script>
+<script type="text/javascript" src="js/parser.js"></script>
 <script type="text/javascript" src="js/states.js"></script>
 <script type="text/javascript" src="js/airport-to-perdiem.js"></script>
 <script type="text/javascript" src="js/perdiem.js"></script>
@@ -623,6 +647,10 @@ $('#itinerary .one-way').click(function() {
 $('#itinerary .multi-city').click(function() {
   destinationsList.setTripType(TripType.MULTI_CITY);
   $('#itinerary .add-destination').show();
+});
+
+$('.copy-and-paste').click(function() {
+  $('.modal').modal('show');
 });
 
 // TODO(sraub): Show and hide these warnings as necessary.
