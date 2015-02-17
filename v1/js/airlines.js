@@ -38,4 +38,18 @@ var AIRLINES = [{
   code: 'WN',
   primary: 'Southwest Airlines',
   other: ['Southwest']
+}, {
+  code: 'VX',
+  primary: 'Virgin America',
+  other: []
 }];
+
+var AIRLINES_TO_CODE = {};
+for (var i = 0; i < AIRLINES.length; ++i) {
+  var airlineData = AIRLINES[i];
+  AIRLINES_TO_CODE[airlineData.primary] = airlineData.code;
+  AIRLINES_TO_CODE[airlineData.code] = airlineData.code;
+  for (var j = 0; j < airlineData.other.length; ++j) {
+    AIRLINES_TO_CODE[airlineData.other[j]] = airlineData.code;
+  }
+}
