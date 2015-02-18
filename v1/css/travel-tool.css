@@ -46,6 +46,49 @@ span.help a {
   line-height: 35px;
 }
 
+/*
+ * Chevrons for tabs. Inspired by http://getfuelux.com.
+ */
+.panel-heading {
+  padding: 0;
+}
+.nav-pills>li+li {
+  margin-left: 0;
+}
+.panel-heading > .nav-pills > li {
+  background-color: #ededed;
+}
+.panel-heading > .nav-pills > li > a {
+  border-radius: 0;
+  padding-left: 30px;
+}
+.panel-heading > .nav-pills > li:first-child > a {
+  padding-left: 20px;
+}
+.panel-heading > .steps li .chevron {
+  border: 20px solid transparent;
+  border-left: 14px solid #d4d4d4;
+  border-right: 0;
+  display: block;
+  position: absolute;
+  right: -14px;
+  top: 0;
+  z-index: 1;
+}
+.panel-heading > .steps li .chevron:before {
+  border: 20px solid transparent;
+  border-left: 14px solid #ededed;
+  border-right: 0;
+  content: "";
+  display: block;
+  position: absolute;
+  right: 1px;
+  top: -20px;
+}
+.panel-heading > .steps li.active .chevron:before {
+  border-left: 14px solid #337ab7;
+}
+
 /* Input styles */
 .form-control[readonly] {
   border: none;
